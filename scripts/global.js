@@ -23,10 +23,10 @@ $(function() {
     var query = $("#searchForm #query").val();
 
     // start:Post Search Query
-    $.post("/api/search.php", $("#searchForm").serialize(), function(data) {
-      var data = $.parseJSON(data);
+    $.post("api/search.php", $("#searchForm").serialize(), function(data) {
+      let searchData = $.parseJSON(data);
 
-      if (data.total_results === 0) {
+      if (searchData.total_results === 0) {
         $("#queryMessage").html('No results found for: ' + query);
         $("#queryMessage").addClass('alert-warning').removeClass('alert-danger');
         $("#queryLoader").fadeOut();
@@ -36,20 +36,23 @@ $(function() {
       // Clear the Results so they don't stack
       $("#searchResults").html('');
 
-      const totalDisplayed = data.results.length;
-      const totalResults = data.total_results;
+      const totalDisplayed = searchData.results.length;
+      const totalResults = searchData.total_results;
 
       // Display Count
       $("#searchRecordTotal").html(`Displaying ${totalDisplayed} out of ${totalResults} possible movies.`);
       $("#searchRecordTotal").show();
 
       // start:Each Iterate
-      $.each(data.results, function(key, obj) {
+      $.each(searchData.results, function(key, obj) {
 
-        let overview = obj.overview.substring(0, 75) + '...';
+        let overview = obj.overview.length > 0
+          ? obj.overview.substring(0, 75) + '...'
+          : '<i>No Description</i>';
+
         let date = obj.release_date
           ? obj.release_date.substring(0, 4)
-          : "Unknown";
+          : "<i>Unknown</i>";
 
         let image = obj.poster_path
           ? `https://image.tmdb.org/t/p/w200/${obj.poster_path}`
@@ -74,7 +77,7 @@ $(function() {
           </div>
         `);
 
-        $("#queryLoader").fadeOut()
+        $("#queryLoader").fadeOut();
       });
       // end:Each Iterate
 
@@ -86,29 +89,32 @@ $(function() {
         var id = parseInt($(this).data('id'));
 
         // start: API Get
-        $.get(`/api/movie.php?id=${id}`, function(data) {
-          var data = $.parseJSON(data);
-          console.log(data);
+        $.get(`api/movie.php?id=${id}`, function(data) {
+          let movieData = $.parseJSON(data);
+          // console.log(movieData);
 
-          let image = data.poster_path
-          ? `https://image.tmdb.org/t/p/w200/${data.poster_path}`
-          : 'https://via.placeholder.com/300x450';
+          let overview = movieData.overview.length > 0
+            ? movieData.overview
+            : '<i>No Description</i>';
 
-          let date = data.release_date
-          ? data.release_date.substring(0, 4)
-          : "Unknown";
+          let image = movieData.poster_path
+            ? `https://image.tmdb.org/t/p/w200/${movieData.poster_path}`
+            : 'https://via.placeholder.com/300x450';
+
+          let date = movieData.release_date
+            ? movieData.release_date.substring(0, 4)
+            : "<i>Unknown</i>";
 
           let genres = '';
-          $.each(data.genres, function(key, obj) {
-            console.log(obj.name);
+          $.each(movieData.genres, function(key, obj) {
             genres += `${obj.name}, `;
           });
           genres = genres.length
             ? genres.substring(0, genres.length - 2)
-            : "Unknown";
+            : "<i>Unknown</i>";
 
           // Populate Modal (partials/modal.js included in index.php)
-          $("#movieModal .modal-title").html(data.title)
+          $("#movieModal .modal-title").html(movieData.title)
           $("#movieModal .modal-body").html(`
             <div class="row">
               <div class="col-md-4">
@@ -122,11 +128,11 @@ $(function() {
                   </tr>
                   <tr>
                     <td class="fw-bold">Runtime</td>
-                    <td>${data.runtime} minutes</td>
+                    <td>${movieData.runtime} minutes</td>
                   </tr>
                   <tr>
                     <td class="fw-bold">Original Language</td>
-                    <td>${data.original_language}</td>
+                    <td>${movieData.original_language}</td>
                   </tr>
                   <tr>
                     <td class="fw-bold">Genre(s)</td>
@@ -134,7 +140,7 @@ $(function() {
                   </tr>
                 </table>
                 <p>
-                  ${data.overview}
+                  ${overview}
                 </p>
               </div>
             </div>
@@ -151,4 +157,4 @@ $(function() {
 
   }); // end:onSubmit
 
-})
+});

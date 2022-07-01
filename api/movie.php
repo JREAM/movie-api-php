@@ -1,8 +1,13 @@
 <?php
-require '../constants.php';
-require '../lib/curl.php';
+require_once '../constants.php';
+require_once '../lib/curl.php';
+require_once '../lib/output.php';
 
 $movieId = (int) $_GET['id'];
 
-curl("$API_ENDPOINT/movie/$movieId", $API_KEY);
-
+try {
+  $result = curl(API_ENDPOINT . "/movie/$movieId", API_KEY);
+  json($result);
+} catch (Exception $error) {
+  json($error);
+}

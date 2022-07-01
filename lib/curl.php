@@ -1,5 +1,5 @@
 <?php
-require '../constants.php';
+require_once('../constants.php');
 
 /**
  * Outputs JSON Headers and Data
@@ -10,7 +10,8 @@ require '../constants.php';
  *
  * @return void (Prints JSON)
  */
-function curl(string $endpoint, string $apiKey, array $postData = []) {
+function curl(string $endpoint, string $apiKey, array $postData = [])
+{
 
   $ch = curl_init($endpoint);
 
@@ -34,15 +35,9 @@ function curl(string $endpoint, string $apiKey, array $postData = []) {
   // Close Connection (Before Return Statement)
   curl_close($ch);
 
-  // Set Headers
-  header('Content-type: application/json');
-  header('Cache-Control: no-cache, must-revalidate');
-
-  // Get the Results
   if ($result === false) {
-    print_r(curl_error($ch));
-    echo json_encode(curl_error($ch));
+    throw new \UnexpectedValueException(curl_error($ch));
   }
 
-  echo json_encode($result);
+  return $result;
 }

@@ -15,7 +15,9 @@
 <main role="main" class="container">
 
   <h1>Movie Search</h1>
-  <p class="lead">When searching is required, we've got you covered.
+  <p class="lead">
+    When searching is required, we've got you covered.
+  </p>
 
   <!-- FORM:Search-->
   <form method="post" id="searchForm">

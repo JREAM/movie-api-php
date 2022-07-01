@@ -1,10 +1,12 @@
 <?php
-require('../lib/db.php');
-require('../lib/curl.php');
-require('../constants.php');
+require_once '../constants.php';
+require_once '../lib/db.php';
+require_once '../lib/curl.php';
+require_once '../lib/output.php';
 
 // Get the Query POST (It could be a get, but oh well)
 $query = htmlspecialchars($_POST['query']);
+$db = getDatabase();
 
 // -----------------------------------------------
 // @IMPORTANT - SKIP DATABASE,  STARTS here
@@ -47,4 +49,9 @@ if (!$result) {
 // -----------------------------------------------
 
 // Make the API call which outputs JSON HEADERS
-curl("$API_ENDPOINT/search/movie?query=$query&page=1", $API_KEY);
+try {
+  $result = curl(API_ENDPOINT . "/search/movie?query=$query&page=1", API_KEY);
+  json($result);
+} catch (Exception $error) {
+  json($error);
+}
