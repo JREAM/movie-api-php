@@ -1,0 +1,49 @@
+@import "loader.css";
+
+body {}
+
+.navbar {
+  padding: 2rem 4rem;
+  margin-bottom: 2rem;
+}
+
+.btn,
+.box-shadow {
+  box-shadow: 0 .1rem .5rem rgba(0, 0, 0, 0.2) !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.modal-header {
+  background: #F0F5F5;
+  box-shadow: 0 .2rem .5rem rgba(0, 0, 0, 0.1);
+}
+
+.modal-title {
+  text-shadow: 1px 1px 1px #fff;
+}
+
+button.movieDetails,
+a.movieDetails {
+  transition: ease 0.4s all;
+}
+
+a.movieDetails:hover {
+  box-shadow: 0 0.7rem 1rem rgba(0, 0, 0, 0.4) !important;
+}
+
+button.movieDetails:hover {
+  box-shadow: 0 0.3rem .4rem rgb(0 0 0 / 40%) !important;
+}
+
+.card {
+  padding-top: 1rem;
+}
+
+
+
+.bg-tint {
+  background: #F5F5F4;
+}
